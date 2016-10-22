@@ -1,5 +1,9 @@
 extends layout
 
 block content
-  h1= title
-  p Welcome to #{title}
+  for file in files
+    .file
+      if (file.type == "dir")
+        a(href="#{file.name}")= file.name
+      else
+        span= file.name
