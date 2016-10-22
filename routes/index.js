@@ -3,7 +3,7 @@ var router = express.Router()
 var GitHubApi = require('github')
 
 /* GET home page. */
-router.get('/', function (req, res, next) {
+router.get(/\/browse.*/, function (req, res) {
 
   var github = new GitHubApi({
     debug: true,
@@ -15,7 +15,7 @@ router.get('/', function (req, res, next) {
   github.repos.getContent({
     'owner': 'UKHomeOffice',
     'repo': 'posters',
-    'path': ''
+    'path': req.path.substr('/browse/'.length)
   }, function (err, files){
       console.log(JSON.stringify(files, null, '  '))
       res.render('index', { files: files })
