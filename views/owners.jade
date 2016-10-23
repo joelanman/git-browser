@@ -1,0 +1,11 @@
+extends layout
+
+block content
+  ul
+    each value, name in owners
+      li
+        p= name
+        ul
+          each repo in value.repos
+            li
+              a(href="/browse/#{name}/#{repo}")= repo

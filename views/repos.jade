@@ -1,0 +1,6 @@
+extends layout
+
+block content
+  each repo in repos
+    p
+      a(href="/browse/#{owner}/#{repo}")= repo

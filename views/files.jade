@@ -4,11 +4,11 @@ block content
   each file, filename in files
     .file
       if file.type == "tree"
-        .thumbnail
+        a.thumbnail(href="/browse/#{currentPath}/#{filename}")
         p
           a(href="/browse/#{currentPath}/#{filename}")= filename
       else if file.type == "pdf"
-        .thumbnail(style="background-image: url(#{file.imagePath})")
+        a.thumbnail(style="background-image: url(#{file.imagePath})" href="#{file.githubURL}")
         p= filename
       else
         .thumbnail

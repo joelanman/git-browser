@@ -1,21 +1,36 @@
+var fs = require('fs')
+var path = require('path')
+
 var express = require('express')
 var router = express.Router()
 var GitHubApi = require('github')
-var path = require('path')
 
 var log = function (data) {
   console.log(JSON.stringify(data, null, '  '))
 }
 
-router.get('browse', function (req, res) {
+router.get('/browse', function (req, res) {
 
   // list the owners
 
-})
+  var owners = {}
 
-router.get('browse/:owner', function (req, res) {
+  var ownersList = fs.readdirSync(__dirname + '/../maps')
 
-  // list the repos
+  ownersList.forEach(function(owner){
+    repos = fs.readdirSync(__dirname + `/../maps/${owner}`)
+    repos = repos.map(function(repo){
+      var extension = path.extname(repo)
+      return path.basename(repo, extension)
+    })
+    owners[owner] = {
+      repos: repos
+    }
+  })
+
+  log(owners)
+
+  res.render('owners', {owners: owners})
 
 })
 
@@ -36,13 +51,12 @@ router.get(/\/browse.*/, function (req, res, next) {
     return next(error);
   }
 
-  log(files)
+  var localPath = (pathParts.length === 0) ? "" : pathParts.join('/') + "/"
+  log(localPath)
 
   while (pathParts.length > 0){
     files = files.children[pathParts.shift()]
   }
-
-  log(files.children)
 
   for (var fileName in files.children){
     var extension = path.extname(fileName)
@@ -51,11 +65,11 @@ router.get(/\/browse.*/, function (req, res, next) {
       var file = files.children[fileName]
       file.type = 'pdf'
       file.imagePath = `https://s3-eu-west-1.amazonaws.com/joelanman-github-gallery/png/${currentPath}/${basename}.png`
+      file.githubURL = `https://github.com/${owner}/${repo}/blob/master/${localPath}${fileName}`
+      // https://github.com/UKHomeOffice/posters/blob/master/gds/its-ok-to.pdf
     }
   }
 
-  log(files.children)
-  
   res.render('files', {currentPath: currentPath, files: files.children})
 
 })

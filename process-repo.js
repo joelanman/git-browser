@@ -107,7 +107,7 @@ github.gitdata.getTree({
   mkdirp.sync(`maps/${owner}/`)
 
   fs.writeFileSync(`maps/${owner}/${repo}.json`, JSON.stringify(map))
-  //githubToS3(pdfs)
+  githubToS3(pdfs)
 })
 
 function githubToS3 (files) {
