@@ -1,8 +1,33 @@
 body {
   padding: 50px;
-  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+  font: 19px Helvetica, Arial, sans-serif;
+  background: #F0F0F0;
 }
 
 a {
   color: #00B7FF;
+}
+
+.file{
+  float: left;
+  width: 280px;
+  margin: 20px;
+  text-align: center;
+}
+
+.file p{
+  width: 280px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.thumbnail{
+  display: inline-block;
+  width: 250px;
+  height: 250px;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-image: url(/images/file-icon.png);
 }

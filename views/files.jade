@@ -1,0 +1,16 @@
+extends layout
+
+block content
+  each file, filename in files
+    .file
+      if file.type == "tree"
+        .thumbnail
+        p
+          a(href="/browse/#{currentPath}/#{filename}")= filename
+      else if file.type == "pdf"
+        .thumbnail(style="background-image: url(#{file.imagePath})")
+        p= filename
+      else
+        .thumbnail
+        p= filename
+        

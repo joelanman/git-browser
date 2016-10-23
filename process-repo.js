@@ -56,7 +56,10 @@ github.gitdata.getTree({
 
   var tree = response.tree
 
-  var map = {}
+  var map = {
+    'type': 'tree',
+    'children': {}
+  }
 
   var addToMap = function (pathParts, type, parent) {
     if (pathParts.length > 1) {
@@ -91,7 +94,7 @@ github.gitdata.getTree({
     var filePath = tree[i].path
     var fileType = tree[i].type
     var pathParts = filePath.split('/')
-    addToMap(pathParts, fileType, map)
+    addToMap(pathParts, fileType, map.children)
     var fileExtension = path.extname(filePath)
 
     if (fileExtension === '.pdf') {
