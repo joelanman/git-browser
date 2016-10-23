@@ -1,7 +1,15 @@
+#!/usr/bin/env node
+
+var fs = require('fs')
 var path = require('path')
-var GitHubApi = require('github')
+
 var aws = require('aws-sdk')
+var GitHubApi = require('github')
+var minimist = require('minimist')
+var mkdirp = require('mkdirp');
 var request = require('request')
+
+var argv = minimist(process.argv.slice(2))
 
 var AWS_ACCESS_KEY = process.env.AWS_ACCESS_KEY
 var AWS_SECRET_KEY = process.env.AWS_SECRET_KEY
@@ -12,15 +20,24 @@ aws.config.update({accessKeyId: AWS_ACCESS_KEY,
 
 var s3Stream = require('s3-upload-stream')(new aws.S3())
 
-var owner = 'UKHomeOffice'
-var repo = 'posters'
+var owner = argv._[0]
+var repo  = argv._[1]
+
+if (!owner){
+  console.error('No owner specified. Usage: process-repo [owner] [repo]')
+  process.exit(1)
+}
+
+if (!repo){
+  console.error('No repo specified. Usage: process-repo [owner] [repo]')
+  process.exit(1)
+}
 
 var log = function (data) {
   console.log(JSON.stringify(data, null, '  '))
 }
 
 var github = new GitHubApi({
-  debug: true,
   headers: {
     'user-agent': 'github-gallery'
   }
@@ -29,7 +46,7 @@ var github = new GitHubApi({
 github.gitdata.getTree({
   'owner': owner,
   'repo': repo,
-  'sha': 'c9c8d1b1be8b1c213bd3176684ba93baebc5e7f8',
+  'sha': 'master',
   'recursive': true
 }, function (err, response) {
   if (err) {
@@ -72,17 +89,22 @@ github.gitdata.getTree({
 
   for (var i = 0; i < tree.length; i++) {
     var filePath = tree[i].path
-    // var fileType = tree[i].type
-    // var pathParts = path.split('/')
-    // addToMap(pathParts, type, map)
+    var fileType = tree[i].type
+    var pathParts = filePath.split('/')
+    addToMap(pathParts, fileType, map)
     var fileExtension = path.extname(filePath)
 
     if (fileExtension === '.pdf') {
       pdfs.push(filePath)
     }
   }
+  log(map)
   log(pdfs)
-  githubToS3(pdfs)
+
+  mkdirp.sync(`maps/${owner}/`)
+
+  fs.writeFileSync(`maps/${owner}/${repo}.json`, JSON.stringify(map))
+  //githubToS3(pdfs)
 })
 
 function githubToS3 (files) {
