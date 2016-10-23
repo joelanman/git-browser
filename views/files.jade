@@ -7,7 +7,7 @@ block content
         a.thumbnail(href="/browse/#{currentPath}/#{filename}")
         p
           a(href="/browse/#{currentPath}/#{filename}")= filename
-      else if file.type == "pdf"
+      else if (file.type == "pdf" || file.type == "png")
         a.thumbnail(style="background-image: url(#{file.imagePath})" href="#{file.githubURL}")
         p= filename
       else

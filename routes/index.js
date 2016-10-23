@@ -55,18 +55,22 @@ router.get(/\/browse.*/, function (req, res, next) {
   log(localPath)
 
   while (pathParts.length > 0){
-    files = files.children[pathParts.shift()]
+    files = files.children[decodeURI(pathParts.shift())]
   }
 
   for (var fileName in files.children){
-    var extension = path.extname(fileName)
+    var extension = path.extname(fileName).toLowerCase()
+    var file = files.children[fileName]
     if (extension == '.pdf'){
       var basename = path.basename(fileName, extension)
-      var file = files.children[fileName]
       file.type = 'pdf'
       file.imagePath = `https://s3-eu-west-1.amazonaws.com/joelanman-github-gallery/png/${currentPath}/${basename}.png`
       file.githubURL = `https://github.com/${owner}/${repo}/blob/master/${localPath}${fileName}`
-      // https://github.com/UKHomeOffice/posters/blob/master/gds/its-ok-to.pdf
+    }
+    if (extension == '.png'){
+      file.type = 'png'
+      file.imagePath = `https://raw.githubusercontent.com/${owner}/${repo}/master/${localPath}${fileName}`
+      file.githubURL = `https://github.com/${owner}/${repo}/blob/master/${localPath}${fileName}`
     }
   }
 
