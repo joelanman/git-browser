@@ -1,5 +1,5 @@
 body {
-  padding: 50px;
+  padding: 10px;
   font: 19px Helvetica, Arial, sans-serif;
   background: #F0F0F0;
 }
@@ -24,8 +24,8 @@ a {
 
 .thumbnail{
   display: inline-block;
-  width: 250px;
-  height: 250px;
+  width: 280px;
+  height: 280px;
   background-size: contain;
   background-repeat: no-repeat;
   background-position: center;

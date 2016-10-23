@@ -74,7 +74,10 @@ router.get(/\/browse.*/, function (req, res, next) {
     }
   }
 
-  res.render('files', {currentPath: currentPath, files: files.children})
+  res.render('files', {owner: owner,
+                       repo: repo,
+                       currentPath: currentPath,
+                       files: files.children})
 
 })
 

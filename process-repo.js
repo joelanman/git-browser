@@ -100,6 +100,12 @@ github.gitdata.getTree({
     if (fileExtension === '.pdf') {
       pdfs.push(filePath)
     }
+    // to do
+    // also copy pngs
+    // also copy jpg
+    // also process svg
+    // retain original extension eg example.svg.png
+    // otherwise example.png and example.pdf will clash
   }
   log(map)
   log(pdfs)
