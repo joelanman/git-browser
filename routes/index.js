@@ -4,7 +4,6 @@ var GitHubApi = require('github')
 
 /* GET home page. */
 router.get(/\/browse.*/, function (req, res) {
-
   var github = new GitHubApi({
     debug: true,
     headers: {
@@ -16,11 +15,14 @@ router.get(/\/browse.*/, function (req, res) {
     'owner': 'UKHomeOffice',
     'repo': 'posters',
     'path': req.path.substr('/browse/'.length)
-  }, function (err, files){
-      console.log(JSON.stringify(files, null, '  '))
-      res.render('index', { files: files })
+  }, function (err, files) {
+    if (err) {
+      console.error(err)
+      return
+    }
+    console.log(JSON.stringify(files, null, '  '))
+    res.render('index', { files: files })
   })
-
 })
 
 module.exports = router
