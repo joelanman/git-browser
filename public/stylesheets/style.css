@@ -26,7 +26,7 @@ a {
   display: inline-block;
   width: 280px;
   height: 280px;
-  background-size: contain;
+  background-size: 140px;
   background-repeat: no-repeat;
   background-position: center;
   background-image: url(/images/file-icon.png);
