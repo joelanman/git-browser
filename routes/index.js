@@ -10,16 +10,15 @@ var log = function (data) {
 }
 
 router.get('/browse', function (req, res) {
-
   // list the owners
 
   var owners = {}
 
   var ownersList = fs.readdirSync(__dirname + '/../maps')
 
-  ownersList.forEach(function(owner){
+  ownersList.forEach(function (owner) {
     repos = fs.readdirSync(__dirname + `/../maps/${owner}`)
-    repos = repos.map(function(repo){
+    repos = repos.map(function (repo) {
       var extension = path.extname(repo)
       return path.basename(repo, extension)
     })
@@ -31,45 +30,38 @@ router.get('/browse', function (req, res) {
   log(owners)
 
   res.render('owners', {owners: owners})
-
 })
 
 router.get(/\/browse.*/, function (req, res, next) {
-
   var currentPath = req.path.substr('/browse/'.length)
   pathParts = currentPath.split('/')
 
   var owner = pathParts.shift()
-  var repo  = pathParts.shift()
+  var repo = pathParts.shift()
 
   console.log('owner: ' + owner)
   console.log('repo:  ' + repo)
 
-  try{
+  try {
     var files = require(`../maps/${owner}/${repo}.json`)
-  } catch (error){
-    return next(error);
+  } catch (error) {
+    return next(error)
   }
 
-  var localPath = (pathParts.length === 0) ? "" : pathParts.join('/') + "/"
+  var localPath = (pathParts.length === 0) ? '' : pathParts.join('/') + '/'
   log(localPath)
 
-  while (pathParts.length > 0){
+  while (pathParts.length > 0) {
     files = files.children[decodeURI(pathParts.shift())]
   }
 
-  for (var fileName in files.children){
+  for (var fileName in files.children) {
     var extension = path.extname(fileName).toLowerCase()
     var file = files.children[fileName]
-    if (extension == '.pdf'){
-      var basename = path.basename(fileName, extension)
-      file.type = 'pdf'
-      file.imagePath = `https://s3-eu-west-1.amazonaws.com/joelanman-github-gallery/png/${currentPath}/${basename}.png`
-      file.githubURL = `https://github.com/${owner}/${repo}/blob/master/${localPath}${fileName}`
-    }
-    if (extension == '.png'){
-      file.type = 'png'
-      file.imagePath = `https://raw.githubusercontent.com/${owner}/${repo}/master/${localPath}${fileName}`
+    fileName = encodeURIComponent(fileName)
+    if (extension == '.jpg' || extension == '.pdf' || extension == '.png') {
+      file.thumbnail = true
+      file.imagePath = `https://s3-eu-west-1.amazonaws.com/joelanman-github-gallery/out/${currentPath}/${fileName}.thumbnail.jpg`
       file.githubURL = `https://github.com/${owner}/${repo}/blob/master/${localPath}${fileName}`
     }
   }
@@ -78,7 +70,6 @@ router.get(/\/browse.*/, function (req, res, next) {
                        repo: repo,
                        currentPath: currentPath,
                        files: files.children})
-
 })
 
 module.exports = router

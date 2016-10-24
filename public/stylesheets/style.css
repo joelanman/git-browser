@@ -29,5 +29,21 @@ a {
   background-size: 140px;
   background-repeat: no-repeat;
   background-position: center;
-  background-image: url(/images/file-icon.png);
+  background-image: url(/images/file-icon.png);;
+  vertical-align: bottom;
+}
+
+.thumbnail2{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 280px;
+  height: 280px;;
+  vertical-align: bottom;
+}
+
+.thumbnail2 img{
+  display: inline-block;
+  max-width: 260px;
+  max-height: 260px
 }

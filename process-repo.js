@@ -6,7 +6,7 @@ var path = require('path')
 var aws = require('aws-sdk')
 var GitHubApi = require('github')
 var minimist = require('minimist')
-var mkdirp = require('mkdirp');
+var mkdirp = require('mkdirp')
 var request = require('request')
 
 var argv = minimist(process.argv.slice(2))
@@ -21,14 +21,14 @@ aws.config.update({accessKeyId: AWS_ACCESS_KEY,
 var s3Stream = require('s3-upload-stream')(new aws.S3())
 
 var owner = argv._[0]
-var repo  = argv._[1]
+var repo = argv._[1]
 
-if (!owner){
+if (!owner) {
   console.error('No owner specified. Usage: process-repo [owner] [repo]')
   process.exit(1)
 }
 
-if (!repo){
+if (!repo) {
   console.error('No repo specified. Usage: process-repo [owner] [repo]')
   process.exit(1)
 }
@@ -88,7 +88,7 @@ github.gitdata.getTree({
     }
   }
 
-  var pdfs = []
+  var filesToConvert = []
 
   for (var i = 0; i < tree.length; i++) {
     var filePath = tree[i].path
@@ -97,23 +97,17 @@ github.gitdata.getTree({
     addToMap(pathParts, fileType, map.children)
     var fileExtension = path.extname(filePath)
 
-    if (fileExtension === '.pdf') {
-      pdfs.push(filePath)
+    if (fileExtension === '.pdf' || fileExtension === '.png' || fileExtension === '.jpg') {
+      filesToConvert.push(filePath)
     }
-    // to do
-    // also copy pngs
-    // also copy jpg
-    // also process svg
-    // retain original extension eg example.svg.png
-    // otherwise example.png and example.pdf will clash
   }
   log(map)
-  log(pdfs)
+  log(filesToConvert)
 
   mkdirp.sync(`maps/${owner}/`)
 
   fs.writeFileSync(`maps/${owner}/${repo}.json`, JSON.stringify(map))
-  githubToS3(pdfs)
+  githubToS3(filesToConvert)
 })
 
 function githubToS3 (files) {
@@ -122,10 +116,20 @@ function githubToS3 (files) {
   var url = 'https://raw.githubusercontent.com'
   url += `/${owner}/${repo}/master/${file}`
 
+  var contentTypes = {
+    '.jpg': 'image/jpeg',
+    '.pdf': 'application/pdf',
+    '.png': 'image/png'
+  }
+
+  var fileExtension = path.extname(file)
+
+  var ContentType = contentTypes[fileExtension]
+
   request(url).pipe(s3Stream.upload({
     'Bucket': S3_BUCKET,
-    'Key': `pdf/${owner}/${repo}/${file}`,
-    'ContentType': 'application/pdf'
+    'Key': `in/${owner}/${repo}/${file}`,
+    'ContentType': ContentType
   }).on('uploaded', function () {
     console.log(`uploaded ${file}`)
   }))
