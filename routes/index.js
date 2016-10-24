@@ -9,7 +9,7 @@ var log = function (data) {
   console.log(JSON.stringify(data, null, '  '))
 }
 
-router.get('/browse', function (req, res) {
+router.get('/', function (req, res) {
   // list the owners
 
   var owners = {}
@@ -29,11 +29,11 @@ router.get('/browse', function (req, res) {
 
   log(owners)
 
-  res.render('owners', {owners: owners})
+  res.render('home', {owners: owners})
 })
 
-router.get(/\/browse.*/, function (req, res, next) {
-  var currentPath = req.path.substr('/browse/'.length)
+router.get(/\/.*/, function (req, res, next) {
+  var currentPath = req.path.substr(1) // remove leading /
   pathParts = currentPath.split('/')
 
   var owner = pathParts.shift()
@@ -51,8 +51,12 @@ router.get(/\/browse.*/, function (req, res, next) {
   var localPath = (pathParts.length === 0) ? '' : pathParts.join('/') + '/'
   log(localPath)
 
+  var breadcrumbs = []
+
   while (pathParts.length > 0) {
-    files = files.children[decodeURI(pathParts.shift())]
+    var pathPart = decodeURI(pathParts.shift())
+    breadcrumbs.push(pathPart)
+    files = files.children[pathPart]
   }
 
   for (var fileName in files.children) {
@@ -68,6 +72,7 @@ router.get(/\/browse.*/, function (req, res, next) {
 
   res.render('files', {owner: owner,
                        repo: repo,
+                       breadcrumbs: breadcrumbs,
                        currentPath: currentPath,
                        files: files.children})
 })

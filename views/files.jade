@@ -1,19 +1,30 @@
 extends layout
 
+block breadcrumbs
+
+  span.arrow ➝ 
+  a(href="/#{owner}/#{repo}") #{owner} #{repo}
+  
+  each breadcrumb in breadcrumbs
+    span.arrow ➝ 
+    a(href="/#{owner}/#{repo}/#{breadcrumb}")= breadcrumb
+
 block content
 
-  each file, filename in files
-    .file
-      if file.type == "tree"
-        a.thumbnail(href="/browse/#{currentPath}/#{filename}")
-        p
-          a(href="/browse/#{currentPath}/#{filename}")= filename
-      else if (file.thumbnail)
-        //- a.thumbnail(style="background-size: contain; background-image: url('#{file.imagePath}')" href="#{file.githubURL}")
-        a.thumbnail2(href="#{file.githubURL}")
-          img(src="#{file.imagePath}")
-        p= filename
-      else
-        .thumbnail
-        p= filename
-        
+  .files
+  
+    each file, filename in files
+      .file
+        if file.type == "tree"
+          a.thumbnail(href="/#{currentPath}/#{filename}")
+          p
+            a(href="/#{currentPath}/#{filename}")= filename
+        else if (file.thumbnail)
+          //- a.thumbnail(style="background-size: contain; background-image: url('#{file.imagePath}')" href="#{file.githubURL}")
+          a.thumbnail2(href="#{file.githubURL}")
+            img(src="#{file.imagePath}")
+          p= filename
+        else
+          .thumbnail
+          p= filename
+          

@@ -1,9 +1,0 @@
-extends layout
-
-block content
-  for file in files
-    .file
-      if (file.type == "dir")
-        a(href="#{file.name}")= file.name
-      else
-        span= file.name

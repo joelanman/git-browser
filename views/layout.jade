@@ -1,10 +1,17 @@
 doctype html
 html
+
   head
     title= title
     meta(name="viewport", content="width=device-width, initial-scale=1")
     link(rel='stylesheet', href='/stylesheets/style.css')
+    
   body
-    p
-      a(href="/browse") Home
-    block content
+    header.main-header
+      span.site-name
+        a(href="/") Git browser
+      span.breadcrumbs
+        block breadcrumbs
+        
+    .content
+      block content

@@ -1,15 +1,60 @@
+html {
+  box-sizing: border-box;
+}
+
+*, *:before, *:after {
+  box-sizing: inherit;
+}
+
 body {
-  padding: 10px;
+  margin: 0;
   font: 19px Helvetica, Arial, sans-serif;
   background: #F0F0F0;
+}
+
+h1{
+  font-size: 40px;
 }
 
 a {
   color: #00B7FF;
 }
 
+ul.list{
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+ul.list li{
+  padding: 0.3em 0;
+}
+
+.main-header{
+  padding: 20px;
+  background: #fff;
+}
+
+.main-header a{
+  text-decoration: none;
+}
+
+.main-header .arrow{
+  display: inline-block;
+  padding: 0 0.6em;
+}
+
+.content{
+  padding: 20px;
+}
+
+.files{
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+}
+
 .file{
-  float: left;
   width: 280px;
   margin: 20px;
   text-align: center;

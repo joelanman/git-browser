@@ -1,0 +1,19 @@
+extends layout
+
+block content
+
+  h1 Git browser
+  
+  p Browse GitHub projects in thumbnail view.
+  
+  p Currently supports JPG, PDF and PNG - SVG coming soon.
+  
+  h2 Sample projects:
+
+  ul.list
+    each value, name in owners
+      each repo in value.repos
+        li
+          a(href="/#{name}/#{repo}") #{name} - #{repo}
+          
+  p A project by <a href="https://twitter.com/joelanman">Joe Lanman</a>
