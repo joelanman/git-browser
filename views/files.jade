@@ -14,17 +14,18 @@ block content
   .files
   
     each file, filename in files
-      .file
-        if file.type == "tree"
-          a.thumbnail(href="/#{currentPath}/#{filename}")
-          p
-            a(href="/#{currentPath}/#{filename}")= filename
-        else if (file.thumbnail)
-          //- a.thumbnail(style="background-size: contain; background-image: url('#{file.imagePath}')" href="#{file.githubURL}")
-          a.thumbnail2(href="#{file.githubURL}")
+      if file.type == "tree"
+        a.file(href="/#{currentPath}/#{filename}")
+          .icon.folder
+          p= filename
+      else if (file.thumbnail)
+        //- a.thumbnail(style="background-size: contain; background-image: url('#{file.imagePath}')" href="#{file.githubURL}")
+        a.file(href="#{file.githubURL}")
+          .icon.thumbnail2
             img(src="#{file.imagePath}")
           p= filename
-        else
-          .thumbnail
+      else
+        a.file(href="#{file.githubURL}")
+          .icon.generic
           p= filename
           

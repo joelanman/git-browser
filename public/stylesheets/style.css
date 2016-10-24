@@ -8,7 +8,7 @@ html {
 
 body {
   margin: 0;
-  font: 19px Helvetica, Arial, sans-serif;
+  font: 19px sans-serif;
   background: #F0F0F0;
 }
 
@@ -55,40 +55,92 @@ ul.list li{
 }
 
 .file{
-  width: 280px;
-  margin: 20px;
+  width: 120px;
+  margin: 10px;
   text-align: center;
 }
 
 .file p{
-  width: 280px;
+  width: 120px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  font-size: 14px;
+  color: #333;
 }
 
-.thumbnail{
+a.file{
+  text-decoration: none;
+  color: inherit;
+}
+
+.icon{
   display: inline-block;
-  width: 280px;
-  height: 280px;
-  background-size: 140px;
+  width: 120px;
+  height: 120px;
   background-repeat: no-repeat;
   background-position: center;
-  background-image: url(/images/file-icon.png);;
   vertical-align: bottom;
+}
+
+.icon.generic{
+  background-image: url(/images/file-icon.png);
+  background-size: 80px;
+}
+
+.icon.folder{
+  background-image: url(/images/folder-icon.png);
+  background-size: 120px;
 }
 
 .thumbnail2{
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 280px;
-  height: 280px;;
+  width: 120px;
+  height: 120px;
   vertical-align: bottom;
 }
 
 .thumbnail2 img{
   display: inline-block;
-  max-width: 260px;
-  max-height: 260px
+  max-width: 120px;
+  max-height: 120px;
+}
+
+@media (min-width: 1024px) {
+
+  .file{
+    width: 220px;
+    margin: 20px;
+    text-align: center;
+  }
+
+  .file p{
+    width: 220px;
+    font-size: 16px;
+  }
+
+  .icon{
+    width: 220px;
+    height: 220px;
+  }
+
+  .icon.generic{
+    background-size: 140px;
+  }
+
+  .icon.folder{
+    background-size: 200px;
+  }
+
+  .thumbnail2{
+    width: 220px;
+    height: 220px;
+  }
+
+  .thumbnail2 img{
+    max-width: 220px;
+    max-height: 220px;
+  }
 }
