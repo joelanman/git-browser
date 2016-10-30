@@ -97,7 +97,7 @@ github.gitdata.getTree({
     addToMap(pathParts, fileType, map.children)
     var fileExtension = path.extname(filePath)
 
-    if (fileExtension === '.pdf' || fileExtension === '.png' || fileExtension === '.jpg') {
+    if (fileExtension === '.pdf' || fileExtension === '.png' || fileExtension === '.jpg'|| fileExtension === '.svg') {
       filesToConvert.push(filePath)
     }
   }

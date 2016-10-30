@@ -64,7 +64,7 @@ router.get(/\/.*/, function (req, res, next) {
     var file = files.children[fileName]
     fileName = encodeURIComponent(fileName)
     file.githubURL = `https://github.com/${owner}/${repo}/blob/master/${localPath}${fileName}`
-    if (extension == '.jpg' || extension == '.pdf' || extension == '.png') {
+    if (extension == '.jpg' || extension == '.pdf' || extension == '.png' || extension == '.svg') {
       file.thumbnail = true
       file.imagePath = `https://s3-eu-west-1.amazonaws.com/joelanman-github-gallery/out/${currentPath}/${fileName}.thumbnail.jpg`
     }
