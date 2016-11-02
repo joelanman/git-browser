@@ -22,6 +22,7 @@ var s3Stream = require('s3-upload-stream')(new aws.S3())
 
 var owner = argv._[0]
 var repo = argv._[1]
+var sha = (argv._[2]) ? argv._[2] : "master"
 
 if (!owner) {
   console.error('No owner specified. Usage: process-repo [owner] [repo]')
@@ -46,7 +47,7 @@ var github = new GitHubApi({
 github.gitdata.getTree({
   'owner': owner,
   'repo': repo,
-  'sha': 'master',
+  'sha': sha,
   'recursive': true
 }, function (err, response) {
   if (err) {

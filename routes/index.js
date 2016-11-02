@@ -54,9 +54,28 @@ router.get(/\/.*/, function (req, res, next) {
   var breadcrumbs = []
 
   while (pathParts.length > 0) {
+    
     var pathPart = decodeURI(pathParts.shift())
-    breadcrumbs.push(pathPart)
-    files = files.children[pathPart]
+
+    files = files.children[pathPart] // move down the tree
+
+    var breadcrumb = {
+      'name': pathPart,
+      'url': '/' + owner + '/' + repo + '/'
+    }
+
+    if (pathParts.length == 0){
+      breadcrumb.last = true
+    }
+
+    if (breadcrumbs.length > 0){
+      breadcrumb.url = breadcrumbs[breadcrumbs.length-1].url + '/'
+    }
+
+    breadcrumb.url += pathPart
+
+    breadcrumbs.push(breadcrumb)
+
   }
 
   for (var fileName in files.children) {
