@@ -62,7 +62,16 @@ block script
       };
     }
     
-    function flexboxGrid(){
+    function flexboxGrid(parentId, childClass){
+      
+      window.addEventListener("resize", function(){
+        addSpacers(parentId, childClass)
+      })
+      
+      addSpacers(parentId, childClass)
+    }
+    
+    function addSpacers(parentId, childClass){
       
       var spacers = document.getElementsByClassName('flexbox-grid-spacer')
       
@@ -76,8 +85,8 @@ block script
         
       }
 
-      var files = document.querySelectorAll('.file')
-      files = [].slice.call(files) // turns nodeList into array
+      var files = document.querySelectorAll('.' + childClass)
+      files = Array.from(files)
       
       var rowTotals = []
       var currentRow = 0
@@ -110,14 +119,12 @@ block script
       
       for (var i = 0; i < difference; i++) {
         var spacer = document.createElement('div')
-        spacer.classList.add('file','flexbox-grid-spacer')
+        spacer.classList.add(childClass,'flexbox-grid-spacer')
         docFrag.appendChild(spacer)
       }
 
-      document.getElementById('files').appendChild(docFrag)
+      document.getElementById(parentId).appendChild(docFrag)
       
     }
     
-    flexboxGrid()
-    
-    window.addEventListener("resize", flexboxGrid)
+    flexboxGrid('files','file')
