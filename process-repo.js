@@ -96,7 +96,7 @@ github.gitdata.getTree({
     var fileType = tree[i].type
     var pathParts = filePath.split('/')
     addToMap(pathParts, fileType, map.children)
-    var fileExtension = path.extname(filePath)
+    var fileExtension = path.extname(filePath).toLowerCase()
 
     if (fileExtension === '.pdf' || fileExtension === '.png' || fileExtension === '.jpg'|| fileExtension === '.svg') {
       filesToConvert.push(filePath)
