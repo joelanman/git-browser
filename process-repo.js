@@ -35,7 +35,11 @@ if (!repo) {
 }
 
 var log = function (data) {
-  console.log(JSON.stringify(data, null, '  '))
+  if (typeof (data) == "object"){
+    console.log(JSON.stringify(data, null, '  '))
+  } else {
+    console.log(data)
+  }
 }
 
 var github = new GitHubApi({
