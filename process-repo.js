@@ -34,14 +34,6 @@ if (!repo) {
   process.exit(1)
 }
 
-var log = function (data) {
-  if (typeof (data) == "object"){
-    console.log(JSON.stringify(data, null, '  '))
-  } else {
-    console.log(data)
-  }
-}
-
 var github = new GitHubApi({
   headers: {
     'user-agent': 'github-gallery'
