@@ -13,9 +13,11 @@
     "express": "~4.13.4",
     "github": "^5.2.2",
     "jade": "~1.11.0",
+    "knex": "^0.13.0",
     "minimist": "^1.2.0",
     "mkdirp": "^0.5.1",
     "morgan": "~1.7.0",
+    "pg": "^7.3.0",
     "request": "^2.75.0",
     "s3-upload-stream": "^1.0.7",
     "serve-favicon": "~2.3.0"
