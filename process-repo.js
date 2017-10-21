@@ -51,15 +51,12 @@ var getLatestCommitDate = function(account, name){
     }, function (err, response) {
       if (err) {
         console.error(err)
-        return
+        reject(err)
       }
-
       var date = response[0].commit.author.date
-      log(date)
-
       resolve(date)
     })
-  }
+  })
 }
 
 var getRepoMap = function(account, name){

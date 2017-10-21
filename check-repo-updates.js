@@ -15,14 +15,19 @@ var db = require('knex')({
 
 log('check-repo-updates')
 
-const throttled = pThrottle(getLatestCommitDate, 1, 5000)
+const throttledGetLatestCommitDate = pThrottle(getLatestCommitDate, 1, 5000)
 
 db('repos').select()
 .then(function(rows) {
   for (let row of rows) {
-    throttled(row.account, row.name).then(
+    throttledGetLatestCommitDate(row.account, row.name).then(
       function(date){
         log(date)
+        log(typeof(date))
+        log(row.last_updated)
+        if (date > row.last_updated){
+          log('getting tree')
+        }
       }
     )
     // getLatestCommitDate(row.account, row.name)
@@ -35,7 +40,6 @@ db('repos').select()
 })
 
 // to do
-//   get updated date from github
 //   if date_updated < updated date_updated
 //   get tree, convert to map and store
 //   trigger thumbnails
