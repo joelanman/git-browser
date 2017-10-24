@@ -60,77 +60,79 @@ var getLatestCommitDate = function(account, name){
 }
 
 var getRepoMap = function(account, name){
+  log(`getRepoMap(${account},${name})`)
+  return new Promise((resolve, reject) => {
+    github.gitdata.getTree({
+      'owner': account,
+      'repo': name,
+      'sha': 'master',
+      'recursive': true
+    }, function (err, response) {
+      if (err) {
+        console.error(err)
+        reject(err)
+      }
 
-  github.gitdata.getTree({
-    'owner': account,
-    'repo': name,
-    'sha': sha,
-    'recursive': true
-  }, function (err, response) {
-    if (err) {
-      console.error(err)
-      return
-    }
+      var tree = response.tree
 
-    var tree = response.tree
+      var map = {
+        'type': 'tree',
+        'children': {}
+      }
 
-    var map = {
-      'type': 'tree',
-      'children': {}
-    }
+      var addToMap = function (pathParts, type, parent) {
+        if (pathParts.length > 1) {
+          var folder = pathParts.shift()
+          if (!parent[folder]) {
+            parent[folder] = {
+              'type': 'tree',
+              'children': {}
+            }
+          }
+          addToMap(pathParts, type, parent[folder].children)
+          return
+        }
 
-    var addToMap = function (pathParts, type, parent) {
-      if (pathParts.length > 1) {
-        var folder = pathParts.shift()
-        if (!parent[folder]) {
-          parent[folder] = {
+        var name = pathParts[0]
+
+        if (type === 'tree') {
+          parent[name] = {
             'type': 'tree',
             'children': {}
           }
-        }
-        addToMap(pathParts, type, parent[folder].children)
-        return
-      }
-
-      var name = pathParts[0]
-
-      if (type === 'tree') {
-        parent[name] = {
-          'type': 'tree',
-          'children': {}
-        }
-      } else {
-        parent[name] = {
-          'type': type
+        } else {
+          parent[name] = {
+            'type': type
+          }
         }
       }
-    }
 
-    var filesToConvert = []
+      var filesToConvert = []
 
-    for (var i = 0; i < tree.length; i++) {
-      var filePath = tree[i].path
-      var fileType = tree[i].type
-      var pathParts = filePath.split('/')
-      addToMap(pathParts, fileType, map.children)
-      var fileExtension = path.extname(filePath).toLowerCase()
+      for (var i = 0; i < tree.length; i++) {
+        var filePath = tree[i].path
+        var fileType = tree[i].type
+        var pathParts = filePath.split('/')
+        addToMap(pathParts, fileType, map.children)
+        var fileExtension = path.extname(filePath).toLowerCase()
 
-      if (fileExtension === '.pdf' || fileExtension === '.png' || fileExtension === '.jpg'|| fileExtension === '.svg') {
-        filesToConvert.push(filePath)
+        if (fileExtension === '.pdf' || fileExtension === '.png' || fileExtension === '.jpg'|| fileExtension === '.svg') {
+          filesToConvert.push(filePath)
+        }
       }
-    }
-    log(map)
-    log(filesToConvert)
+      // log(map)
+      // log(filesToConvert)
 
-    return {
-      map: map,
-      filesToConvert: filesToConvert
-    }
+      resolve({
+        map: map,
+        filesToConvert: filesToConvert
+      })
 
-    // mkdirp.sync(`maps/${owner}/`)
-    //
-    // fs.writeFileSync(`maps/${owner}/${repo}.json`, JSON.stringify(map))
-    // githubToS3(filesToConvert)
+      // mkdirp.sync(`maps/${owner}/`)
+      //
+      // fs.writeFileSync(`maps/${owner}/${repo}.json`, JSON.stringify(map))
+      // githubToS3(filesToConvert)
+    })
   })
 }
 
