@@ -49,6 +49,7 @@ var getLatestCommitDate = function(account, name){
       'owner': account,
       'repo': name
     }, function (err, response) {
+      log(`got commits`)
       if (err) {
         console.error(err)
         reject(err)
@@ -136,7 +137,8 @@ var getRepoMap = function(account, name){
   })
 }
 
-function githubToS3 (files) {
+const sendFiles = function(owner, repo, files, callback){
+
   var file = files.pop()
   console.log(`githubToS3: ${file}`)
   var url = 'https://raw.githubusercontent.com'
@@ -161,8 +163,23 @@ function githubToS3 (files) {
   }))
 
   if (files.length !== 0) {
-    setTimeout(githubToS3, 2000, files)
+    setTimeout(sendFiles, 2000, owner, repo, files, callback)
+  } else {
+    callback()
   }
+}
+
+function githubToS3 (owner, repo, files) {
+
+  log(`githubToS3`)
+
+  return new Promise((resolve, reject) => {
+
+    sendFiles(owner, repo, files, function(){
+      resolve()
+    })
+
+  })
 }
 
 exports.getRepoMap = getRepoMap
