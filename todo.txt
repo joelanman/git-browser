@@ -2,3 +2,4 @@
 - email when check updates is return
 - refactor check updates/process repo
 - test auto checking on heroku
+- add a test repo for the auto update
