@@ -1,0 +1,4 @@
+- Handle errors when asked for missing owner/repos
+- email when check updates is return
+- refactor check updates/process repo
+- test auto checking on heroku
