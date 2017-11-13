@@ -11,9 +11,8 @@ block content
   h2 Available projects
 
   ul.list
-    each value, name in owners
-      each repo in value.repos
-        li
-          a(href="/#{name}/#{repo}") #{name} - #{repo}
+    each repo in repos
+      li
+        a(href="/#{repo.owner}/#{repo.name}") #{repo.owner} - #{repo.name}
           
   p A project by <a href="https://twitter.com/joelanman">Joe Lanman</a>

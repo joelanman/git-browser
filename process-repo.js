@@ -42,11 +42,11 @@ var github = new GitHubApi({
   }
 })
 
-var getLatestCommitDate = function(account, name){
-  log(`getLatestCommitDate(${account},${name})`)
+var getLatestCommitDate = function(owner, name){
+  log(`getLatestCommitDate(${owner},${name})`)
   return new Promise((resolve, reject) => {
     github.repos.getCommits({
-      'owner': account,
+      'owner': owner,
       'repo': name
     }, function (err, response) {
       log(`got commits`)
@@ -60,11 +60,11 @@ var getLatestCommitDate = function(account, name){
   })
 }
 
-var getRepoMap = function(account, name){
-  log(`getRepoMap(${account},${name})`)
+var getRepoMap = function(owner, name){
+  log(`getRepoMap(${owner},${name})`)
   return new Promise((resolve, reject) => {
     github.gitdata.getTree({
-      'owner': account,
+      'owner': owner,
       'repo': name,
       'sha': 'master',
       'recursive': true
