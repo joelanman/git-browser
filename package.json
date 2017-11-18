@@ -6,6 +6,7 @@
     "start": "node ./bin/www"
   },
   "dependencies": {
+    "@sendgrid/mail": "^6.1.4",
     "aws-sdk": "^2.6.11",
     "body-parser": "~1.15.1",
     "cookie-parser": "~1.4.3",

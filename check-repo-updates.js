@@ -1,6 +1,7 @@
 const dateFns = require('date-fns')
 const pQueue = require('p-queue')
 const pThrottle = require('p-throttle')
+const sgMail = require('@sendgrid/mail')
 
 const getLatestCommitDate = require('./process-repo').getLatestCommitDate
 const getRepoMap = require('./process-repo').getRepoMap
@@ -10,6 +11,15 @@ const db = require('./db').db
 
 const log = require('./utils').log
 const queue = new pQueue({concurrency: 1})
+
+sgMail.setApiKey(process.env.SENDGRID_API_KEY)
+
+var email = {
+  to: 'joelanman@gmail.com',
+  from: 'joelanman@gmail.com',
+  subject: 'Git Browser update',
+  text: 'Updated at ' + dateFns.format(new Date(), 'H:m [on] MM/DD/YYYY') + '\n'
+}
 
 log('check-repo-updates')
 
@@ -51,12 +61,15 @@ const processRow = function(row){
 
   log(`---------------`)
   log(`processRow`)
-  log(`${row.id}`)
+  log(`${row.owner} - ${row.name}`)
+
+  email.text += `${row.owner} - ${row.name} \n`
 
   return new Promise((resolve, reject) => {
 
     if (row.last_updated === null){
       log(`No last_updated, processing repo`)
+      email.text += `No last_updated, processing repo \n`
       throttledGetRepoMap(row.owner, row.name).then(
         function(data){
           processRepoMap(row, data).then(resolve)
@@ -71,6 +84,7 @@ const processRow = function(row){
           last_updated = dateFns.parse(row.last_updated)
           if (date > row.last_updated){
             log('updated since last_updated')
+            email.text += `updated since last_updated \n`
             throttledGetRepoMap(row.owner, row.name).then(
               function(data){
                 processRepoMap(row, data).then(resolve)
@@ -79,6 +93,7 @@ const processRow = function(row){
             )
           } else {
             log('no changes - skipping')
+            email.text += `no changes - skipping \n`
             resolve()
           }
         }
@@ -101,6 +116,7 @@ db('repos')
   queue.add(function(){
     return new Promise(function (resolve, reject){
       log(`All done`)
+      sgMail.send(email)
       db.destroy()
     })
   })
