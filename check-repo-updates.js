@@ -17,8 +17,8 @@ sgMail.setApiKey(process.env.SENDGRID_API_KEY)
 var email = {
   to: 'joelanman@gmail.com',
   from: 'joelanman@gmail.com',
-  subject: 'Git Browser update',
-  text: 'Updated at ' + dateFns.format(new Date(), 'H:m [on] MM/DD/YYYY') + '\n'
+  subject: 'Git Browser update - ' + dateFns.format(new Date(), 'H:mm [on] MM/DD/YYYY'),
+  text: ''
 }
 
 log('check-repo-updates')
