@@ -21,6 +21,8 @@ var email = {
   text: ''
 }
 
+let hasChanges = false
+
 log('check-repo-updates')
 
 const throttledGetLatestCommitDate = pThrottle(getLatestCommitDate, 1, 2000)
@@ -69,6 +71,7 @@ const processRow = function(row){
       if (lastCommitDate > lastUpdated){
         log('new commit since last updated')
         email.text += `new commit since last updated \n`
+        hasChanges = true
         throttledGetRepoMap(row.owner, row.name).then(
           function(data){
             processRepoMap(row, data, lastCommitDate)
@@ -99,6 +102,9 @@ db('repos')
   queue.add(function(){
     return new Promise(function (resolve, reject){
       log(`All done`)
+      if (hasChanges) {
+        email.subject += ' - with changes'
+      }
       sgMail.send(email)
       db.destroy()
     })
